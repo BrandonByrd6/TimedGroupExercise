@@ -9,8 +9,8 @@ namespace TGE.WebAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly INewUserService _userService;
+        public UserController(INewUserService userService)
         {
             _userService = userService;
         }
@@ -32,15 +32,15 @@ namespace TGE.WebAPI.Controllers
             return BadRequest(new TextResponse("User could not be registered"));
         }
 
-        [HttpGet("{userId:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int userId)
-        {
-            UserDetail? detail = await _userService.GetUserByIdAsync(userId);
-            if (detail is null)
-            {
-                return NotFound();
-            }
-            return Ok(detail);
-        }
+        // [HttpGet("{userId:int}")]
+        // public async Task<IActionResult> GetById([FromRoute] int userId)
+        // {
+        //     UserDetail? detail = await _userService.GetUserByIdAsync(userId);
+        //     if (detail is null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     return Ok(detail);
+        // }
     }
 }
