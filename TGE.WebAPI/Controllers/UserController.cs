@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TGE.Models.Responses;
 using TGE.Models.User;
@@ -9,12 +10,13 @@ namespace TGE.WebAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly INewUserService _userService;
-        public UserController(INewUserService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
+        [Authorize]
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegister model)
         {
