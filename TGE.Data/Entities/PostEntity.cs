@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-
-namespace TGE.Data.Entites;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace TGE.Data.Entities;
 
 public class PostEntity
 {
@@ -8,6 +8,7 @@ public class PostEntity
     public int Id { get; set; }
 
     [Required]
+    [ForeignKey(nameof(Author))]
     public int AuthorId { get; set; }
     public UserEntity Author {get; set; } = null;
 

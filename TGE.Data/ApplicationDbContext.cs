@@ -17,7 +17,6 @@ public class ApplicationDbContext : IdentityDbContext<UserEntity, IdentityRole<i
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserEntity>().ToTable("Users");
-        modelBuilder.Entity<PostEntity>().HasOne(n => n.Author).HasForeignKey(n => n.AuthorId)
     }
 
 }
