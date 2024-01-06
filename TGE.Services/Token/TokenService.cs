@@ -36,7 +36,7 @@ namespace TGE.Services.Token
 
         private async Task<UserEntity?> GetValidUserAsync(TokenRequest model)
         {
-            var userEntity = await _userManager.FindByNameAsync(model.Email);
+            var userEntity = await _userManager.FindByNameAsync(model.UserName);    //can set email to be username, makes it simpler
 
             if (userEntity is null)
             {

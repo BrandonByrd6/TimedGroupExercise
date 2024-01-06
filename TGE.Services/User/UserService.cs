@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using TGE.Data;
 using TGE.Data.Entities;
@@ -21,17 +22,22 @@ public class UserService : IUserService
     }
     public async Task<bool> RegisterUserAsync(UserRegister model)
     {
-        if(await CheckEmailAvailability(model.Email) == false)
+        if (await CheckEmailAvailability(model.Email) == false)
         {
             System.Console.WriteLine("Email is already in use");
             return false;
         }
-
+        if (await CheckEmailAvailability(model.UserName) == false)
+        {
+            System.Console.WriteLine("Username is already in use");
+            return false;
+        }
         UserEntity entity = new()
         {
             Email = model.Email,
             FirstName = model.FirstName,
-            LastName = model.LastName
+            LastName = model.LastName,
+            UserName = model.UserName
         };
 
         IdentityResult registerResult = await _userManager.CreateAsync(entity, model.Password);
@@ -51,7 +57,8 @@ public class UserService : IUserService
             Id = entity.Id,
             Email = entity.Email,
             FirstName = entity.FirstName,
-            LastName = entity.LastName
+            LastName = entity.LastName,
+            UserName = entity.UserName
         };
         return detail;
     }

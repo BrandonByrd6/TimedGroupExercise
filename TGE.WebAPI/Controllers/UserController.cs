@@ -20,7 +20,7 @@ namespace TGE.WebAPI.Controllers
             _tokenService = tokenService;
         }
 
-        [Authorize]
+        
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegister model)
         {
