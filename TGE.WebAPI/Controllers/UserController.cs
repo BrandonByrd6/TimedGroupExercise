@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TGE.Models.Responses;
+using TGE.Models.Token;
 using TGE.Models.User;
+using TGE.Services.Token;
 using TGE.Services.User;
 
 namespace TGE.WebAPI.Controllers
@@ -11,9 +13,11 @@ namespace TGE.WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ITokenService _tokenService;
+        public UserController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [Authorize]
@@ -32,6 +36,21 @@ namespace TGE.WebAPI.Controllers
                 return Ok(response);
             }
             return BadRequest(new TextResponse("User could not be registered"));
+        }
+
+        [HttpPost("~/api/Token")]
+        public async Task<IActionResult> GetToken([FromBody] TokenRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            TokenResponse? response = await _tokenService.GetTokenAsync(request);
+
+            if (response is null)
+                return BadRequest(new TextResponse("Invalid username or password"));
+
+            return Ok(response);
         }
 
         // [HttpGet("{userId:int}")]
