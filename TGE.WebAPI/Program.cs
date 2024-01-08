@@ -10,12 +10,16 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TGE.Services.Token;
 using Microsoft.OpenApi.Models;
+using TGE.Services.Reply;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IReplyService, ReplyService>();
+
+builder.Services.AddHttpContextAccessor();
 
 // Connection String
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
