@@ -14,7 +14,7 @@ namespace TGE.Models.User
         public string FirstName {get; set;} = null!;
         public string LastName {get; set;} = null!;
         public string UserName {get; set;} = null!;
-        
+
         // public List<PostEntity> posts {get; set;} = new();
     }
 }
