@@ -14,4 +14,8 @@ public class UserEntity : IdentityUser<int>
     [MaxLength(100)]
     public string? LastName {get; set;} = string.Empty;
     public DateTime DateCreated {get; set;}
+
+    public List<PostEntity> Posts {get; set;} = new();
+    public List<CommentEntity> Comments {get; set;} = new();
+    public List<ReplyEntity> Replies {get; set;} = new();
 }
