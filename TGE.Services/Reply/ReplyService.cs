@@ -38,7 +38,8 @@ namespace TGE.Services.Reply
             ReplyEntity entity = new()
             {
                 ParentId = request.ParentId,
-                Text = request.Text
+                Text = request.Text,
+                AuthorId = request.AuthorId
             };
             _dbContext.Replies.Add(entity);
             var numberOfChanges = await _dbContext.SaveChangesAsync();
