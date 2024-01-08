@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using TGE.Data.Entites;
 
 namespace TGE.Data.Entities;
 

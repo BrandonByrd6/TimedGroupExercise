@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
+using TGE.Data.Entites;
 
 namespace TGE.Data.Entities
 {

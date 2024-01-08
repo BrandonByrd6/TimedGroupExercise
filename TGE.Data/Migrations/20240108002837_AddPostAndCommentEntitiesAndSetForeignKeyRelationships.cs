@@ -137,7 +137,7 @@ namespace TGE.Data.Migrations
                 column: "AuthorId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Replies_Users_UserEntityId",
