@@ -20,7 +20,8 @@ namespace TGE.WebAPI.Controllers
 
         //todo: Need to add ability to add to specific comment
             // call GetRepliesByCommentIdAsync method first to select specific comment to reply to ?
-            // or FindAsync method (reference Delete method)
+            // or FindAsync method (reference Delete method) 
+                // dont want to make too many database calls at one time
         [HttpPost]
         public async Task<IActionResult> CreateReply([FromBody] ReplyCreate reply)
         {
