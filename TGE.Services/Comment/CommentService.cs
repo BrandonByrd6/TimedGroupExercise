@@ -2,17 +2,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TGE.Data;
 using TGE.Data.Entities;
-using TGE.Models.Post;
+using TGE.Models.Comment;
 
-namespace TGE.Services.Post;
+namespace TGE.Services.Comment;
 
-public class PostService : IPostService
+public class CommentService : ICommentService
 {
 
     private readonly ApplicationDbContext _dbContext;
     private readonly int _userId;
 
-    public PostService(UserManager<UserEntity> userManager,
+    public CommentService(UserManager<UserEntity> userManager,
         SignInManager<UserEntity> signInManager,
         ApplicationDbContext dbContext)
     {
@@ -27,64 +27,65 @@ public class PostService : IPostService
         _dbContext = dbContext;
     }
 
-    public async Task<bool> CreatePostAsync(PostCreate postCreate)
+    public async Task<bool> CreateCommentAsync(CommentCreate commentCreate)
     {
-        PostEntity entity = new(){
-            Title = postCreate.Title,
+        CommentEntity entity = new(){
+            PostId = commentCreate.PostId,
             AuthorId = _userId,
-            Text = postCreate.Text
+            Text = commentCreate.Text
         };
 
-        _dbContext.Posts.Add(entity);
+        _dbContext.Comments.Add(entity);
         var changes = await _dbContext.SaveChangesAsync();
         if(changes != 1) return false;
 
         return true;
     }
 
-    public async Task<bool> DeletePostAsync(int id)
+    public async Task<bool> DeleteCommentAsync(int id)
     {
-        var postEntity = await _dbContext.Posts.FindAsync(id);
+        var commentEntity = await _dbContext.Comments.FindAsync(id);
 
-          if(postEntity?.AuthorId != _userId) 
+          if(commentEntity?.AuthorId != _userId) 
             return false;
 
-        _dbContext.Posts.Remove(postEntity);
+        _dbContext.Comments.Remove(commentEntity);
         return await _dbContext.SaveChangesAsync() == 1;
     }
 
-    public async Task<IEnumerable<PostDetail>> GetAllPostsAsync()
+    public async Task<IEnumerable<CommentDetail>> GetCommentsByPostIdAsync(int id)
     {
-        List<PostDetail> posts = await _dbContext.Posts.Select(entity => new PostDetail{
+        List<CommentDetail> comments = await _dbContext.Comments
+         .Where(entity => entity.PostId == id)
+         .Select(entity => new CommentDetail{
             Id = entity.Id,
-            Title = entity.Title,
+            AuthorId = entity.AuthorId,
             Text = entity.Text,
         }).ToListAsync();
 
-        return posts;
+        return comments;
     }
 
-    public async Task<IEnumerable<PostDetail>> GetPostByAuthorIdAsync(int id)
+    public async Task<IEnumerable<CommentDetail>> GetCommentsByAuthorIdAsync(int id)
     {
-         List<PostDetail> posts = await _dbContext.Posts
+         List<CommentDetail> comments = await _dbContext.Comments
          .Where(entity => entity.AuthorId == id)
-         .Select(entity => new PostDetail{
+         .Select(entity => new CommentDetail{
             Id = entity.Id,
-            Title = entity.Title,
+            PostId = entity.PostId,
             Text = entity.Text,
         }).ToListAsync();
 
-        return posts;
+        return comments;
     }
 
-    public async Task<bool> UpdatePostAsync(PostUpdate request)
+    public async Task<bool> UpdateCommentAsync(CommentUpdate request)
     {
-        PostEntity? entity = await _dbContext.Posts.FindAsync(request.Id);
+        CommentEntity? entity = await _dbContext.Comments.FindAsync(request.Id);
 
         if(entity?.AuthorId != _userId) 
             return false;
         
-        entity.Title = request.Title;
         entity.Text = request.Text;
 
         int numOfChanges = await _dbContext.SaveChangesAsync();

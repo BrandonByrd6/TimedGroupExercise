@@ -9,6 +9,7 @@ public class PostEntity
     public int Id { get; set; }
 
     [Required]
+    [ForeignKey(nameof(Author))]
     public int AuthorId { get; set; }
     public UserEntity Author {get; set; } = null;
 

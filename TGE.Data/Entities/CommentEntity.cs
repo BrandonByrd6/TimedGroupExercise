@@ -28,3 +28,4 @@ namespace TGE.Data.Entities
         public List<ReplyEntity> Replies {get; set;} = new();
     }
 }
+
