@@ -5,6 +5,7 @@ using TGE.Data;
 using TGE.Data.Entities;
 using Microsoft.Extensions.Options;
 using TGE.Services.Post;
+using TGE.Services.Comment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddHttpContextAccessor();
 

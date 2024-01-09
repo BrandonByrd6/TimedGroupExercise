@@ -11,7 +11,7 @@ public interface IPostService
         
         Task<IEnumerable<PostDetail>> GetPostByAuthorIdAsync(int id);
 
-        Task<PostDetail?> UpdatePostAsync(int id);
+        Task<bool> UpdatePostAsync(PostUpdate request);
 
         Task<bool> DeletePostAsync(int id);
 

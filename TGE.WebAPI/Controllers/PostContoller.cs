@@ -41,16 +41,18 @@ public class PostContoller : ControllerBase
         return Ok(posts);
     }
 
-    [HttpPut("{postId:int}")]
-    public async Task<IActionResult> UpdatePost([FromRoute] int postId) {
-        var posts = await _postService.UpdatePostAsync(postId);
-        return Ok(posts);
+    [HttpPut()]
+    public async Task<IActionResult> UpdatePost([FromBody] PostUpdate request) {
+        if(!ModelState.IsValid)
+            return BadRequest();
+        
+        return await _postService.UpdatePostAsync(request) ? Ok("Post Update Successfully") : BadRequest("Post Could not be updated");
+    
     }
 
     [HttpDelete("{postId:int}")]
     public async Task<IActionResult> deletePost([FromRoute] int postId) {
-        var posts = await _postService.DeletePostAsync(postId);
-        return Ok(posts);
+        return await _postService.DeletePostAsync(postId) ? Ok($"Post {postId} was deleted successfully") : BadRequest($"Post {postId} was unable to be deleted!");
     }
 }
 
