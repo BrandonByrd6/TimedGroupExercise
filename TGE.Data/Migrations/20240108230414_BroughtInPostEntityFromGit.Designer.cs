@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TGE.Data;
 
@@ -11,9 +12,11 @@ using TGE.Data;
 namespace TGE.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240108230414_BroughtInPostEntityFromGit")]
+    partial class BroughtInPostEntityFromGit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,7 +106,6 @@ namespace TGE.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -145,7 +147,6 @@ namespace TGE.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
-
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -188,7 +189,6 @@ namespace TGE.Data.Migrations
 
                     b.ToTable("Posts");
                 });
-
 
             modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
                 {
@@ -261,7 +261,6 @@ namespace TGE.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -295,7 +294,6 @@ namespace TGE.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -324,7 +322,6 @@ namespace TGE.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -380,7 +377,6 @@ namespace TGE.Data.Migrations
                         .IsRequired();
                 });
 
-
             modelBuilder.Entity("TGE.Data.Entites.PostEntity", b =>
                 {
                     b.HasOne("TGE.Data.Entities.UserEntity", "Author")
@@ -418,7 +414,6 @@ namespace TGE.Data.Migrations
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
 
                     b.HasOne("TGE.Data.Entities.CommentEntity", "Parent")
                         .WithMany("Replies")

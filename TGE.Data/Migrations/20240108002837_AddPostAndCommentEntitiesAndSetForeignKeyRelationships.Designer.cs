@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TGE.Data;
 
@@ -11,9 +12,11 @@ using TGE.Data;
 namespace TGE.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240108002837_AddPostAndCommentEntitiesAndSetForeignKeyRelationships")]
+    partial class AddPostAndCommentEntitiesAndSetForeignKeyRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,7 +106,6 @@ namespace TGE.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -145,7 +147,6 @@ namespace TGE.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
-
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
@@ -161,7 +162,40 @@ namespace TGE.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TGE.Data.Entites.PostEntity", b =>
+            modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("UserEntityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserEntityId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("TGE.Data.Entities.PostEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,35 +223,6 @@ namespace TGE.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-
-            modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Comments");
-                });
-
             modelBuilder.Entity("TGE.Data.Entities.ReplyEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -229,6 +234,9 @@ namespace TGE.Data.Migrations
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CommentEntityId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ParentId")
                         .HasColumnType("int");
 
@@ -237,11 +245,18 @@ namespace TGE.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("UserEntityId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("CommentEntityId");
+
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("UserEntityId");
 
                     b.ToTable("Replies");
                 });
@@ -260,7 +275,6 @@ namespace TGE.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -295,7 +309,6 @@ namespace TGE.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -325,8 +338,7 @@ namespace TGE.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -380,8 +392,30 @@ namespace TGE.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
+                {
+                    b.HasOne("TGE.Data.Entities.UserEntity", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("TGE.Data.Entites.PostEntity", b =>
+                    b.HasOne("TGE.Data.Entities.PostEntity", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TGE.Data.Entities.UserEntity", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("UserEntityId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("TGE.Data.Entities.PostEntity", b =>
                 {
                     b.HasOne("TGE.Data.Entities.UserEntity", "Author")
                         .WithMany("Posts")
@@ -392,39 +426,27 @@ namespace TGE.Data.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
-                {
-                    b.HasOne("TGE.Data.Entities.UserEntity", "Author")
-                        .WithMany("Comments")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TGE.Data.Entites.PostEntity", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("TGE.Data.Entities.ReplyEntity", b =>
                 {
                     b.HasOne("TGE.Data.Entities.UserEntity", "Author")
-                        .WithMany("Replies")
+                        .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TGE.Data.Entities.CommentEntity", null)
+                        .WithMany("Replies")
+                        .HasForeignKey("CommentEntityId");
 
                     b.HasOne("TGE.Data.Entities.CommentEntity", "Parent")
-                        .WithMany("Replies")
+                        .WithMany()
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TGE.Data.Entities.UserEntity", null)
+                        .WithMany("Replies")
+                        .HasForeignKey("UserEntityId");
 
                     b.Navigation("Author");
 
@@ -434,6 +456,11 @@ namespace TGE.Data.Migrations
             modelBuilder.Entity("TGE.Data.Entities.CommentEntity", b =>
                 {
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("TGE.Data.Entities.PostEntity", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("TGE.Data.Entities.UserEntity", b =>

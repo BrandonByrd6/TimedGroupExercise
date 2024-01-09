@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-namespace TGE.Data.Entities;
+using TGE.Data.Entities;
+
+namespace TGE.Data.Entites;
 
 public class PostEntity
 {
