@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TGE.Data;
+using TGE.Data.Entites;
 using TGE.Data.Entities;
 using TGE.Models.Post;
 
