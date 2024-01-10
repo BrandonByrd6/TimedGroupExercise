@@ -59,7 +59,6 @@ public class CommentService : ICommentService
          .Where(entity => entity.PostId == id)
          .Select(entity => new CommentDetail{
             Id = entity.Id,
-            AuthorId = entity.AuthorId,
             Text = entity.Text,
         }).ToListAsync();
 

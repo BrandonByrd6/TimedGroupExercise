@@ -8,11 +8,11 @@ namespace TGE.WebAPI.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class CommentContoller : ControllerBase
+public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
 
-    public CommentContoller(ICommentService commentService)
+    public CommentController(ICommentService commentService)
     {
         _commentService = commentService;
     }
@@ -30,8 +30,8 @@ public class CommentContoller : ControllerBase
 
 
     [HttpGet("post/{postId:int}")]
-    public async Task<IActionResult> GetCommentsByPostId([FromRoute] int authorId) {
-        var comments = await _commentService.GetCommentsByPostIdAsync(authorId);
+    public async Task<IActionResult> GetCommentsByPostId([FromRoute] int postId) {
+        var comments = await _commentService.GetCommentsByPostIdAsync(postId);
         return Ok(comments);
     }
 
@@ -50,7 +50,7 @@ public class CommentContoller : ControllerBase
     
     }
 
-    [HttpDelete("{postId:int}")]
+    [HttpDelete("{commentId:int}")]
     public async Task<IActionResult> DeleteComment([FromRoute] int commentId) {
         return await _commentService.DeleteCommentAsync(commentId) ? Ok($"Comment {commentId} was deleted successfully") : BadRequest($"Comment {commentId} was unable to be deleted!");
     }
